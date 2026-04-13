@@ -21,9 +21,9 @@ public class CourseController {
         return courseService.createCourse(request);
     }
 
-    @GetMapping("/{name}")
-    public Mono<CourseDetailDto> getCourseByName(@PathVariable String name) {
-        return courseService.getCourseByName(name);
+    @GetMapping("/{id}")
+    public Mono<CourseDetailDto> getCourseByName(@PathVariable Long id) {
+        return courseService.getCourse(id);
     }
 
     @GetMapping
@@ -31,18 +31,18 @@ public class CourseController {
         return courseService.getAllCourses();
     }
 
-    @PutMapping("/{name}")
-    public Mono<CourseDto> updateCourse(@PathVariable String name, @RequestBody UpdateRequest request) {
-        return courseService.updateCourse(name, request);
+    @PutMapping("/{id}")
+    public Mono<CourseDto> updateCourse(@PathVariable Long id, @RequestBody UpdateRequest request) {
+        return courseService.updateCourse(id, request);
     }
 
-    @DeleteMapping("/{name}")
-    public Mono<Void> deleteCourse(@PathVariable String name) {
-        return courseService.deleteCourse(name);
+    @DeleteMapping("/{id}")
+    public Mono<Void> deleteCourse(@PathVariable Long id) {
+        return courseService.deleteCourse(id);
     }
 
-    @PostMapping("/{courseName}/students/{studentName}")
-    public Mono<Void> addStudentToCourse(@PathVariable String courseName, @PathVariable String studentName) {
-        return courseService.addStudentToCourse(courseName, studentName);
+    @PostMapping("/{courseId}/student/{studentId}")
+    public Mono<Void> addStudentToCourse(@PathVariable Long courseId, @PathVariable Long studentId) {
+        return courseService.addStudentToCourse(studentId, courseId);
     }
 }

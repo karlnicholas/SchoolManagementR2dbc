@@ -50,4 +50,23 @@ public class SchoolService {
                 })
             );
     }
+
+    @Transactional(readOnly = true)
+    public Mono<SchoolDto> getSchoolById(Long id) {
+        return schoolRepository.findById(id)
+            .switchIfEmpty(Mono.error(new ResourceNotFoundException("School not found with id: " + id)))
+            .flatMap(school ->
+                Mono.zip(
+                    studentRepository.findAllBySchoolId(school.getId()).collectList(),
+                    courseRepository.findAllBySchoolId(school.getId()).collectList(),
+                    instructorRepository.findAllBySchoolId(school.getId()).collectList()
+                ).map(tuple -> {
+                    // FIX: Convert Lists to Sets
+                    school.setStudents(new HashSet<>(tuple.getT1()));
+                    school.setCourses(new HashSet<>(tuple.getT2()));
+                    school.setInstructors(new HashSet<>(tuple.getT3()));
+                    return EntityDtoMapper.toSchoolDto(school);
+                })
+            );
+    }
 }

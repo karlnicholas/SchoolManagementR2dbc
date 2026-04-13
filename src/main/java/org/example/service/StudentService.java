@@ -37,9 +37,9 @@ public class StudentService {
   }
 
   @Transactional(readOnly = true)
-  public Mono<StudentDetailDto> getStudentByName(String name) {
-    return studentRepository.findByName(name)
-        .switchIfEmpty(Mono.error(new ResourceNotFoundException("Student not found with name: " + name)))
+  public Mono<StudentDetailDto> getStudent(Long id) {
+    return studentRepository.findById(id)
+        .switchIfEmpty(Mono.error(new ResourceNotFoundException("Student not found with id: " + id)))
         .flatMap(student ->
             courseRepository.findAllByStudentId(student.getId())
                 .collectList()
@@ -57,9 +57,9 @@ public class StudentService {
   }
 
   @Transactional
-  public Mono<StudentDto> updateStudent(String name, UpdateRequest request) {
-    return studentRepository.findByName(name)
-        .switchIfEmpty(Mono.error(new ResourceNotFoundException("Student not found with name: " + name)))
+  public Mono<StudentDto> updateStudent(Long id, UpdateRequest request) {
+    return studentRepository.findById(id)
+        .switchIfEmpty(Mono.error(new ResourceNotFoundException("Student not found with id: " + id)))
         .flatMap(student -> {
           student.setName(request.newName());
           return studentRepository.save(student);
@@ -68,9 +68,9 @@ public class StudentService {
   }
 
   @Transactional
-  public Mono<Void> deleteStudent(String name) {
-    return studentRepository.findByName(name)
-        .switchIfEmpty(Mono.error(new ResourceNotFoundException("Student not found with name: " + name)))
+  public Mono<Void> deleteStudent(Long id) {
+    return studentRepository.findById(id)
+        .switchIfEmpty(Mono.error(new ResourceNotFoundException("Student not found with id: " + id)))
         .flatMap(studentRepository::delete);
   }
 }

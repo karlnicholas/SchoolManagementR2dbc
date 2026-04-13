@@ -21,9 +21,9 @@ public class StudentController {
         return studentService.createStudent(request);
     }
 
-    @GetMapping("/{name}")
-    public Mono<StudentDetailDto> getStudentByName(@PathVariable String name) {
-        return studentService.getStudentByName(name);
+    @GetMapping("/{id}")
+    public Mono<StudentDetailDto> getStudent(@PathVariable Long id) {
+        return studentService.getStudent(id);
     }
 
     @GetMapping
@@ -31,13 +31,13 @@ public class StudentController {
         return studentService.getAllStudents();
     }
 
-    @PutMapping("/{name}")
-    public Mono<StudentDto> updateStudent(@PathVariable String name, @RequestBody UpdateRequest request) {
-        return studentService.updateStudent(name, request);
+    @PutMapping("/{id}")
+    public Mono<StudentDto> updateStudent(@PathVariable Long id, @RequestBody UpdateRequest request) {
+        return studentService.updateStudent(id, request);
     }
 
-    @DeleteMapping("/{name}")
-    public Mono<Void> deleteStudent(@PathVariable String name) {
-        return studentService.deleteStudent(name);
+    @DeleteMapping("/{id}")
+    public Mono<Void> deleteStudent(@PathVariable Long id) {
+        return studentService.deleteStudent(id);
     }
 }

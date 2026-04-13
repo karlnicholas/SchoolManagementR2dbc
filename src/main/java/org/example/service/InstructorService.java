@@ -36,9 +36,9 @@ public class InstructorService {
     }
 
     @Transactional(readOnly = true)
-    public Mono<InstructorDetailDto> getInstructorByName(String name) {
-        return instructorRepository.findByName(name)
-            .switchIfEmpty(Mono.error(new ResourceNotFoundException("Instructor not found with name: " + name)))
+    public Mono<InstructorDetailDto> getInstructor(Long id) {
+        return instructorRepository.findById(id)
+            .switchIfEmpty(Mono.error(new ResourceNotFoundException("Instructor not found with id: " + id)))
             .flatMap(instructor ->
                 courseRepository.findAllByInstructorId(instructor.getId())
                     .collectList()
@@ -56,9 +56,9 @@ public class InstructorService {
     }
 
     @Transactional
-    public Mono<InstructorDto> updateInstructor(String name, UpdateRequest request) {
-        return instructorRepository.findByName(name)
-            .switchIfEmpty(Mono.error(new ResourceNotFoundException("Instructor not found with name: " + name)))
+    public Mono<InstructorDto> updateInstructor(Long id, UpdateRequest request) {
+        return instructorRepository.findById(id)
+            .switchIfEmpty(Mono.error(new ResourceNotFoundException("Instructor not found with id: " + id)))
             .flatMap(instructor -> {
                 instructor.setName(request.newName());
                 return instructorRepository.save(instructor);
@@ -67,9 +67,9 @@ public class InstructorService {
     }
 
     @Transactional
-    public Mono<Void> deleteInstructor(String name) {
-        return instructorRepository.findByName(name)
-            .switchIfEmpty(Mono.error(new ResourceNotFoundException("Instructor not found with name: " + name)))
+    public Mono<Void> deleteInstructor(Long id) {
+        return instructorRepository.findById(id)
+            .switchIfEmpty(Mono.error(new ResourceNotFoundException("Instructor not found with id: " + id)))
             .flatMap(instructorRepository::delete);
     }
 }

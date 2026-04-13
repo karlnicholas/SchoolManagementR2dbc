@@ -21,9 +21,9 @@ public class InstructorController {
         return instructorService.createInstructor(request);
     }
 
-    @GetMapping("/{name}")
-    public Mono<InstructorDetailDto> getInstructorByName(@PathVariable String name) {
-        return instructorService.getInstructorByName(name);
+    @GetMapping("/{id}")
+    public Mono<InstructorDetailDto> getInstructor(@PathVariable Long id) {
+        return instructorService.getInstructor(id);
     }
 
     @GetMapping
@@ -31,13 +31,13 @@ public class InstructorController {
         return instructorService.getAllInstructors();
     }
 
-    @PutMapping("/{name}")
-    public Mono<InstructorDto> updateInstructor(@PathVariable String name, @RequestBody UpdateRequest request) {
-        return instructorService.updateInstructor(name, request);
+    @PutMapping("/{id}")
+    public Mono<InstructorDto> updateInstructor(@PathVariable Long id, @RequestBody UpdateRequest request) {
+        return instructorService.updateInstructor(id, request);
     }
 
-    @DeleteMapping("/{name}")
-    public Mono<Void> deleteInstructor(@PathVariable String name) {
-        return instructorService.deleteInstructor(name);
+    @DeleteMapping("/{id}")
+    public Mono<Void> deleteInstructor(@PathVariable Long id) {
+        return instructorService.deleteInstructor(id);
     }
 }

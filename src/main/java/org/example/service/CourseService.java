@@ -46,9 +46,9 @@ public class CourseService {
     }
 
     @Transactional(readOnly = true)
-    public Mono<CourseDetailDto> getCourseByName(String name) {
-        return courseRepository.findByName(name)
-            .switchIfEmpty(Mono.error(new ResourceNotFoundException("Course not found with name: " + name)))
+    public Mono<CourseDetailDto> getCourse(Long id) {
+        return courseRepository.findById(id)
+            .switchIfEmpty(Mono.error(new ResourceNotFoundException("Course not found with id: " + id)))
             .flatMap(course -> {
                 // 1. Query the students
                 Mono<List<Student>> studentsMono = studentRepository.findAllByCourseId(course.getId()).collectList();
@@ -83,9 +83,9 @@ public class CourseService {
     }
 
     @Transactional
-    public Mono<CourseDto> updateCourse(String name, UpdateRequest request) {
-        return courseRepository.findByName(name)
-            .switchIfEmpty(Mono.error(new ResourceNotFoundException("Course not found with name: " + name)))
+    public Mono<CourseDto> updateCourse(Long id, UpdateRequest request) {
+        return courseRepository.findById(id)
+            .switchIfEmpty(Mono.error(new ResourceNotFoundException("Course not found with id: " + id)))
             .flatMap(course -> {
                 course.setName(request.newName());
                 return courseRepository.save(course);
@@ -94,9 +94,9 @@ public class CourseService {
     }
 
     @Transactional
-    public Mono<Void> deleteCourse(String name) {
-        return courseRepository.findByName(name)
-            .switchIfEmpty(Mono.error(new ResourceNotFoundException("Course not found with name: " + name)))
+    public Mono<Void> deleteCourse(Long id) {
+        return courseRepository.findById(id)
+            .switchIfEmpty(Mono.error(new ResourceNotFoundException("Course not found with id: " + id)))
             .flatMap(course ->
                 studentCourseRepository.deleteByCourseId(course.getId())
                     .then(courseRepository.delete(course))
@@ -104,14 +104,14 @@ public class CourseService {
     }
 
     @Transactional
-    public Mono<Void> addStudentToCourse(String courseName, String studentName) {
+    public Mono<Void> addStudentToCourse(Long studentId, Long courseId) {
         return Mono.zip(
-            studentRepository.findByName(studentName)
-                .switchIfEmpty(Mono.error(new ResourceNotFoundException("Student not found: " + studentName))),
-            courseRepository.findByName(courseName)
-                .switchIfEmpty(Mono.error(new ResourceNotFoundException("Course not found: " + courseName)))
-        ).flatMap(tuple -> {
-            return studentCourseRepository.saveLink(tuple.getT1().getId(), tuple.getT2().getId());
-        }).then();
+            studentRepository.findById(studentId)
+                .switchIfEmpty(Mono.error(new ResourceNotFoundException("studentId not found: " + studentId))),
+            courseRepository.findById(courseId)
+                .switchIfEmpty(Mono.error(new ResourceNotFoundException("courseId not found: " + courseId)))
+        ).flatMap(tuple ->
+            studentCourseRepository.saveLink(tuple.getT1().getId(), tuple.getT2().getId())
+        ).then();
     }
 }
