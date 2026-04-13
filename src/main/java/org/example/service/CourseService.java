@@ -1,7 +1,10 @@
 package org.example.service;
 
 import lombok.RequiredArgsConstructor;
-import org.example.dto.*;
+import org.example.dto.CourseDetailDto;
+import org.example.dto.CourseDto;
+import org.example.dto.CreateCourseRequest;
+import org.example.dto.UpdateRequest;
 import org.example.exception.ResourceNotFoundException;
 import org.example.mapper.EntityDtoMapper;
 import org.example.model.Course;
@@ -10,10 +13,9 @@ import org.example.model.Student;
 import org.example.repository.CourseRepository;
 import org.example.repository.InstructorRepository;
 import org.example.repository.SchoolRepository;
-import org.example.repository.StudentRepository;
 import org.example.repository.StudentCourseRepository;
+import org.example.repository.StudentRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -29,7 +31,6 @@ public class CourseService {
     private final InstructorRepository instructorRepository;
     private final StudentCourseRepository studentCourseRepository;
 
-    @Transactional
     public Mono<CourseDto> createCourse(CreateCourseRequest request) {
         return Mono.zip(
             schoolRepository.findByName(request.schoolName())
@@ -45,7 +46,6 @@ public class CourseService {
         }).map(EntityDtoMapper::toCourseDto);
     }
 
-    @Transactional(readOnly = true)
     public Mono<CourseDetailDto> getCourse(Long id) {
         return courseRepository.findById(id)
             .switchIfEmpty(Mono.error(new ResourceNotFoundException("Course not found with id: " + id)))
@@ -76,13 +76,11 @@ public class CourseService {
             });
     }
 
-    @Transactional(readOnly = true)
     public Flux<CourseDto> getAllCourses() {
         return courseRepository.findAll()
             .map(EntityDtoMapper::toCourseDto);
     }
 
-    @Transactional
     public Mono<CourseDto> updateCourse(Long id, UpdateRequest request) {
         return courseRepository.findById(id)
             .switchIfEmpty(Mono.error(new ResourceNotFoundException("Course not found with id: " + id)))
@@ -93,7 +91,6 @@ public class CourseService {
             .map(EntityDtoMapper::toCourseDto);
     }
 
-    @Transactional
     public Mono<Void> deleteCourse(Long id) {
         return courseRepository.findById(id)
             .switchIfEmpty(Mono.error(new ResourceNotFoundException("Course not found with id: " + id)))
@@ -103,7 +100,6 @@ public class CourseService {
             );
     }
 
-    @Transactional
     public Mono<Void> addStudentToCourse(Long studentId, Long courseId) {
         return Mono.zip(
             studentRepository.findById(studentId)

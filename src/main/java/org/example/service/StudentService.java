@@ -1,7 +1,10 @@
 package org.example.service;
 
 import lombok.RequiredArgsConstructor;
-import org.example.dto.*;
+import org.example.dto.CreateStudentRequest;
+import org.example.dto.StudentDetailDto;
+import org.example.dto.StudentDto;
+import org.example.dto.UpdateRequest;
 import org.example.exception.ResourceNotFoundException;
 import org.example.mapper.EntityDtoMapper;
 import org.example.model.Student;
@@ -9,7 +12,6 @@ import org.example.repository.CourseRepository;
 import org.example.repository.SchoolRepository;
 import org.example.repository.StudentRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -23,7 +25,6 @@ public class StudentService {
   private final SchoolRepository schoolRepository;
   private final CourseRepository courseRepository;
 
-  @Transactional
   public Mono<StudentDto> createStudent(CreateStudentRequest request) {
     return schoolRepository.findByName(request.schoolName())
         .switchIfEmpty(Mono.error(new ResourceNotFoundException("School not found: " + request.schoolName())))
@@ -36,7 +37,6 @@ public class StudentService {
         .map(EntityDtoMapper::toStudentDto);
   }
 
-  @Transactional(readOnly = true)
   public Mono<StudentDetailDto> getStudent(Long id) {
     return studentRepository.findById(id)
         .switchIfEmpty(Mono.error(new ResourceNotFoundException("Student not found with id: " + id)))
@@ -56,7 +56,6 @@ public class StudentService {
         .map(EntityDtoMapper::toStudentDto);
   }
 
-  @Transactional
   public Mono<StudentDto> updateStudent(Long id, UpdateRequest request) {
     return studentRepository.findById(id)
         .switchIfEmpty(Mono.error(new ResourceNotFoundException("Student not found with id: " + id)))
@@ -67,7 +66,6 @@ public class StudentService {
         .map(EntityDtoMapper::toStudentDto);
   }
 
-  @Transactional
   public Mono<Void> deleteStudent(Long id) {
     return studentRepository.findById(id)
         .switchIfEmpty(Mono.error(new ResourceNotFoundException("Student not found with id: " + id)))

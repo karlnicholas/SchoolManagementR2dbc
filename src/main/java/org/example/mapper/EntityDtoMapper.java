@@ -1,7 +1,17 @@
 package org.example.mapper;
 
-import org.example.dto.*;
-import org.example.model.*;
+import org.example.dto.CourseDetailDto;
+import org.example.dto.CourseDto;
+import org.example.dto.InstructorDetailDto;
+import org.example.dto.InstructorDto;
+import org.example.dto.SchoolDto;
+import org.example.dto.StudentDetailDto;
+import org.example.dto.StudentDto;
+import org.example.model.Course;
+import org.example.model.Instructor;
+import org.example.model.School;
+import org.example.model.Student;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;

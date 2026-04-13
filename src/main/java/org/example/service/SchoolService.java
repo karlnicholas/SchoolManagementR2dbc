@@ -11,7 +11,6 @@ import org.example.repository.InstructorRepository;
 import org.example.repository.SchoolRepository;
 import org.example.repository.StudentRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;
 
 import java.util.HashSet; // Added import
@@ -25,14 +24,12 @@ public class SchoolService {
     private final CourseRepository courseRepository;
     private final InstructorRepository instructorRepository;
 
-    @Transactional
     public Mono<SchoolDto> createSchool(CreateSchoolRequest request) {
         School school = new School();
         school.setName(request.name());
         return schoolRepository.save(school).map(EntityDtoMapper::toSchoolDto);
     }
 
-    @Transactional(readOnly = true)
     public Mono<SchoolDto> getSchoolByName(String name) {
         return schoolRepository.findByName(name)
             .switchIfEmpty(Mono.error(new ResourceNotFoundException("School not found with name: " + name)))
@@ -51,7 +48,6 @@ public class SchoolService {
             );
     }
 
-    @Transactional(readOnly = true)
     public Mono<SchoolDto> getSchoolById(Long id) {
         return schoolRepository.findById(id)
             .switchIfEmpty(Mono.error(new ResourceNotFoundException("School not found with id: " + id)))

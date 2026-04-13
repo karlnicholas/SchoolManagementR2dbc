@@ -1,7 +1,10 @@
 package org.example.service;
 
 import lombok.RequiredArgsConstructor;
-import org.example.dto.*;
+import org.example.dto.CreateInstructorRequest;
+import org.example.dto.InstructorDetailDto;
+import org.example.dto.InstructorDto;
+import org.example.dto.UpdateRequest;
 import org.example.exception.ResourceNotFoundException;
 import org.example.mapper.EntityDtoMapper;
 import org.example.model.Instructor;
@@ -9,7 +12,6 @@ import org.example.repository.CourseRepository;
 import org.example.repository.InstructorRepository;
 import org.example.repository.SchoolRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -22,7 +24,6 @@ public class InstructorService {
     private final SchoolRepository schoolRepository;
     private final CourseRepository courseRepository;
 
-    @Transactional
     public Mono<InstructorDto> createInstructor(CreateInstructorRequest request) {
         return schoolRepository.findByName(request.schoolName())
             .switchIfEmpty(Mono.error(new ResourceNotFoundException("School not found: " + request.schoolName())))
@@ -35,7 +36,6 @@ public class InstructorService {
             .map(EntityDtoMapper::toInstructorDto);
     }
 
-    @Transactional(readOnly = true)
     public Mono<InstructorDetailDto> getInstructor(Long id) {
         return instructorRepository.findById(id)
             .switchIfEmpty(Mono.error(new ResourceNotFoundException("Instructor not found with id: " + id)))
@@ -55,7 +55,6 @@ public class InstructorService {
             .map(EntityDtoMapper::toInstructorDto);
     }
 
-    @Transactional
     public Mono<InstructorDto> updateInstructor(Long id, UpdateRequest request) {
         return instructorRepository.findById(id)
             .switchIfEmpty(Mono.error(new ResourceNotFoundException("Instructor not found with id: " + id)))
@@ -66,7 +65,6 @@ public class InstructorService {
             .map(EntityDtoMapper::toInstructorDto);
     }
 
-    @Transactional
     public Mono<Void> deleteInstructor(Long id) {
         return instructorRepository.findById(id)
             .switchIfEmpty(Mono.error(new ResourceNotFoundException("Instructor not found with id: " + id)))
