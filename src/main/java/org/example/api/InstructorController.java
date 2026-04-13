@@ -9,9 +9,9 @@ import org.example.service.InstructorService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -42,7 +42,7 @@ public class InstructorController {
         return instructorService.getAllInstructors();
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public Mono<InstructorDto> updateInstructor(@PathVariable Long id, @RequestBody UpdateRequest request) {
         return instructorService.updateInstructor(id, request);
     }
