@@ -34,8 +34,8 @@
 <!--            <scope>runtime</scope>-->
 <!--        </dependency>-->
         <dependency>
-            <groupId>org.tdslib.r2dbc</groupId>
-            <artifactId>mssql</artifactId>
+            <groupId>org.tdslib.r2dbc.mssql</groupId>
+            <artifactId>r2dbc-mssql</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
